@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pokédex</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: red;
+        }
+        .pokemon-container {
+            display: flex;
+            align-items: center;
+            width: 90%;
+            max-width: 600px;
+            height: 200px;
+            background: #f0f0f0;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .pokemon-image {
+            flex: 1;
+            padding-right: 20px;
+        }
+        .pokemon-image img {
+            width: 100px;
+            height: auto;
+            border-radius: 5px;
+        }
+        .pokemon-info {
+            flex: 2;
+        }
+        .pokemon-info p {
+            margin: 0; 
+            padding: 2px;
+        }
+        .pokemon-name {
+            font-size: 20px;
+            color: #333;
+        }
+        .pokemon-number {
+            font-size: 16px;
+            color: #666;
+        }
+        form {
+            display: flex; 
+            justify-content: center; 
+            margin: 20px;
+        }
+
+        input[type="text"] {
+            flex-grow: 1; 
+            padding: 8px 10px; 
+            font-size: 16px;
+            border: 2px solid #ccc; 
+            border-radius: 4px; 
+            margin-right: 8px; 
+        }
+
+        button {
+            padding: 10px 20px; 
+            font-size: 16px;
+            background-color: #007bff; 
+            color: white; 
+            border: none;
+            border-radius: 4px;
+            cursor: pointer; 
+        }
+
+        button:hover {
+            background-color: #0056b3; 
+        }
+
+    </style>
+</head>
+<body>
+    <form action="/pokedex" method="get">
+        <input type="text" name="search" placeholder="Search for Pokémon" value="<%= search %>">
+        <button type="submit">Search</button>
+    </form>
+    <% pokemons.forEach(function(pokemon) { %>
+        <div class="pokemon-container">
+            <div class="pokemon-image">
+                <img src="<%= pokemon.imageURL %>" alt="<%= pokemon.name %>">
+            </div>
+            <div class="pokemon-info">
+                <p class="pokemon-number">Number: <%= pokemon.number %></p>
+                <p class="pokemon-name"><a href="/pokedex/<%= encodeURIComponent(pokemon.name) %>"><%= pokemon.name %></a></p>
+            </div>
+        </div>
+    <% }); %>
+    <button onclick="window.location.href='/'">Go to Homepage</button>
+</body>
+</html>

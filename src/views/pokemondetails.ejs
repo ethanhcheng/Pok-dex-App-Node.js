@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= pokemon.name %> Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif; 
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            background-color: red;
+        }
+        #mainContainer {
+            background-color: #007BFF;
+            border-radius: 10px; 
+            box-shadow: 0 8px 16px rgba(0,0,0,0.25); 
+            padding: 20px; 
+            margin: 20px;
+            width: 90%; 
+            max-width: 800px;
+        }
+        #header {
+            text-align: center; 
+            margin: 10px 0;
+            background-color: #fff;
+            border-radius: 10px;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 10px 0;
+        }
+        #detailsContainer {
+            display: flex;
+            width: 100%;
+            max-width: 800px; 
+            margin-bottom: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        #imageContainer {
+            flex: 1;
+            padding: 20px;
+            background-color: #fff; 
+            border-radius: 10px; 
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+        img {
+            max-width: 100%;
+            max-width: 200px;
+            height: auto;
+            border-radius: 8px;
+        }
+        #infoContainer {
+            flex: 2;
+            padding-left: 20px;
+            background-color: #fff; 
+            border-left: 2px solid #eee;
+        }
+        #infoContainer p, #infoContainer h2 {
+            margin: 10px 0; 
+        }
+        a {
+            color: #007BFF; 
+            text-decoration: none; 
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #0056b3; 
+        }
+        .evolution-img {
+            width: 50px;
+            height: auto;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="mainContainer">
+        <div id="header">
+            <h1><%= pokemon.name %></h1>
+        </div>
+        <div id="detailsContainer">
+            <div id="imageContainer">
+                <img src="<%= pokemon.imageURL %>" alt="<%= pokemon.name %>">
+            </div>
+            <div id="infoContainer">
+                <p><strong>Number:</strong> <%= pokemon.number %></p>
+                <p><strong>Species:</strong> <%= pokemon.species %></p>
+                <p><strong>Type:</strong> <%= pokemon.type.join(', ') %></p>
+                <p><strong>Ability:</strong> <%= pokemon.ability.join(', ') %></p>
+                <p><strong>Height:</strong> <%= pokemon.height %></p>
+                <p><strong>Weight:</strong> <%= pokemon.weight %></p>
+                <p><strong>Description:</strong> <%= pokemon.description %></p>
+                <% if (evolvesFrom) { %>
+                    <p>Evolves From: <a href="/pokedex/<%= encodeURIComponent(evolvesFrom.name) %>">
+                        <%= evolvesFrom.name %></a><img src="<%= evolvesFrom.imageURL %>" alt="<%= evolvesFrom.name %>" class="evolution-img">
+                    </p>
+                <% } %>
+                <% if (evolvesTo) { %>
+                    <p>Evolves To: <a href="/pokedex/<%= encodeURIComponent(evolvesTo.name) %>">
+                        <%= evolvesTo.name %></a><img src="<%= evolvesTo.imageURL %>" alt="<%= evolvesTo.name %>" class="evolution-img">
+                    </p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <a href="/pokedex">Back to Pokédex</a>
+    <a href="/team.html">To Team</a>
+
+    <script>
+    document.getElementById('addToTeamBtn').addEventListener('click', function() {
+     
+    });
+    </script>
+</body>
+</html>
+

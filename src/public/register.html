@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Pokédex App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px; 
+            margin-top: 10px;
+        }
+        h1 {
+            color: #333;
+        }
+        label, input, button {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        input, button {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: border-color 0.3s; 
+        }
+        input:focus {
+            border-color: #005eff;
+        }
+        button {
+            background-color: #005eff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #004ecc;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+        }
+        .login-button, .homepage-button {
+            margin-top: 20px;
+            width: 300px; 
+            text-align: center;
+        }
+        .homepage-button {
+            margin-top: 20px; 
+            width: 300px; 
+            text-align: center; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Register for Pokédex App</h1>
+    <form action="/register" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <div class="button-container">
+            <button type="submit">Register</button>
+        </div>
+    </form>
+    <div class="login-button">
+        <button onclick="window.location.href='/login';">Already registered? Login</button>
+    <div class="homepage-button">
+        <button onclick="window.location.href='/'">Go to Homepage</button>
+    </div>
+</body>
+</html>
