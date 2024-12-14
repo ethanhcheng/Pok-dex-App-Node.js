@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pokémon Team</title>
+    <style>
+     body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: url('/pikachu.jpeg');
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        #addTeamContainer, #searchContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #addTeamContainer {
+            background-color: #f9f9f9;
+        }
+
+        #searchContainer {
+            background-color: red;
+        }
+
+        #teamDisplay {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            width: 90%;
+            max-width: 800px;
+            margin: auto;
+            box-sizing: border-box;
+        }
+
+        .team-member {
+            border: 2px solid #555;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 150px;
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .team-member img {
+            width: 100%;
+            height: auto;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .team-member p {
+            font-size: 0.9em;
+            margin: 5px 0;
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-member button {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .team-member button:hover {
+            background-color: #d32f2f;
+        }
+
+        input[type="text"], .search-button {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .search-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            background-color: #0056b3;
+        }
+
+        #searchResults .search-result {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            height: 100px;
+        }
+
+        #searchResults .search-result img {
+            width: 50px;
+            height: auto;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        #searchResults .search-result p {
+            margin: 0;
+            padding: 0;
+            font-size: 1em;
+            font-weight: bold;
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pokémon Team</h1>
+    
+    <div id="addTeamContainer">
+        <h2>Add to Team</h2>
+        <input type="text" id="exactSearch" placeholder="Enter Pokémon name">
+        <button class = "search-button" onclick="addToTeam()">Add</button>
+    </div>
+    
+    <h2>Your Team</h2>
+    <div id="teamDisplay"></div>
+
+    <div id="searchContainer">
+        <h2>Search Pokémon</h2>
+        <input type="text" class="search-input" id="partialSearch" placeholder="Search Pokémon">
+        <button class="search-button" onclick="searchPartial()">Search</button>
+        <div id="searchResults"></div>
+    </div>
+    <div style="position: fixed; top: 0; right: 0; padding: 10px; background: lightgray;">
+        <span id="userInfo">Loading user...</span>
+        <div id="userActions"></div>
+    </div>
+    
+
+    <script>
+        function addToTeam() {
+            const searchTerm = document.getElementById('exactSearch').value;
+            fetch('/team/add-exact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ searchTerm })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message + (data.pokemon ? (': ' + data.pokemon.name) : ''));
+                    loadTeam(); 
+                }
+            })
+            .catch(error => {
+                console.error('Error adding to team:', error);
+                alert('Error: ' + error.message);
+            });
+        }
+    
+        function searchPartial() {
+            const searchTerm = document.getElementById('partialSearch').value;
+            fetch(`/team/search-partial?searchTerm=${searchTerm}`)
+            .then(response => response.json())
+            .then(data => {
+                const resultsContainer = document.getElementById('searchResults');
+                resultsContainer.innerHTML = ''; 
+                data.forEach(pokemon => {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'search-result';
+                resultDiv.innerHTML = `
+                    <img src="${pokemon.imageURL}" alt="${pokemon.name}">
+                    <p><a href="/pokedex/${encodeURIComponent(pokemon.name)}">${pokemon.name}</a></p>
+                `;
+                resultsContainer.appendChild(resultDiv);
+            });
+            })
+            .catch(error => console.error('Error searching Pokémon:', error));
+        }
+
+    
+        function loadTeam() {
+            fetch('/team')
+            .then(response => response.json())
+            .then(team => {
+                const teamContainer = document.getElementById('teamDisplay');
+                teamContainer.innerHTML = ''; 
+                team.forEach(pokemon => {
+                    const div = document.createElement('div');
+                    div.className = 'team-member';
+                    div.innerHTML = `
+                        <img src="${pokemon.imageURL}" alt="${pokemon.name}" style="width: 100%; max-height: 150px; object-fit: cover;">
+                        <p>${pokemon.name}</p>
+                        <button onclick="removeFromTeam('${pokemon._id.toString()}')">Remove</button>
+                    `;
+                    teamContainer.appendChild(div);
+                });
+            })
+            .catch(error => console.error('Error loading team:', error));
+        }
+    
+        function removeFromTeam(pokemonId) {
+            if (!pokemonId) {
+                alert('Invalid Pokémon ID or format. Please check the data.');
+                return; 
+            }
+
+            fetch(`/team/remove/${pokemonId}`, { method: 'DELETE' })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to remove Pokémon from team');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+                loadTeam(); 
+            })
+            .catch(error => {
+                console.error('Error removing from team:', error);
+                alert('Error removing from team: ' + error.message);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/current-user')
+            .then(response => response.json())
+            .then(data => {
+                const userInfo = document.getElementById('userInfo');
+                const userActions = document.getElementById('userActions');
+
+                if (data.username) {
+                    userInfo.textContent = 'Logged in as: ' + data.username;
+                    userActions.innerHTML = '<button onclick="logout()">Logout</button>';
+                } else {
+                    userInfo.textContent = 'Guest';
+                    userActions.innerHTML = '<button onclick="location.href=\'/login\'">Login</button> <button onclick="location.href=\'/register\'">Register</button>';
+                }
+            });
+
+            window.logout = function() {
+                fetch('/logout', { method: 'POST' })
+                .then(() => {
+                    window.location.href = '/';
+                });
+            };
+        });
+
+        loadTeam(); 
+    </script>
+    <script src="/logout.js"></script>
+    <button class="search-button" onclick="window.location.href='/'">Go to Homepage</button>
+</body>
+</html>
